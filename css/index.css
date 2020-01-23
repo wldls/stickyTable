@@ -1,0 +1,33 @@
+@charset "utf-8";
+
+/* reset */
+body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,button,select{margin:0;padding:0}
+body,input,textarea,select,button,table{color:#333;font-family:'맑은 고딕','Malgun Gothic','Apple SD Gothic Neo',sans-serif;font-size:13px;line-height:1}
+img,fieldset{border:0}
+ul,ol,dl,li{list-style:none}
+em,address{font-style:normal}
+a{color:#333;text-decoration:none;outline:none}
+a:hover,a:active,a:focus{text-decoration:none}
+img{vertical-align:top}
+table{width:100%;border-collapse:collapse;border-spacing:0}
+table th{font-weight:400}
+hr{display:none}
+h1,h2,h3,h4,h5,h6,strong{font-weight:inherit}
+button{overflow:visible;border:0;background:transparent;cursor:pointer;white-space:nowrap;outline:none}
+button::-moz-focus-inner{padding:0;border:0}
+button span{position:relative}
+.blind{overflow:hidden;position:absolute;top:-99rem;left:0px;width:1px;height:1px;border:0;font-size:0;line-height:0;white-space:nowrap}
+select,input{outline:none}
+label{cursor:pointer}
+
+/* common */
+/* html,body,#wrap{width:100%;height:100%}
+.sp{display:inline-block;overflow:hidden;background:url(/resources/images/common/sp.png) no-repeat;line-height:99em;vertical-align:top}
+#wrap{position:relative}
+#container{position:relative;min-width:1130px;padding:80px 0 0 150px}
+.content{padding:20px}
+.content:after{display:block;clear:both;content:''}
+.layer_open{overflow:hidden}
+.dimmed{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:30;background:#000;opacity:0.5}
+.dimmed.on{display:block} */
+

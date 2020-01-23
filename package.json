@@ -1,0 +1,19 @@
+{
+  "name": "stickytable",
+  "version": "1.0.0",
+  "main": "index.html",
+  "repository": "https://github.com/wldls/stickyTable.git",
+  "author": "jiin <dslet2343@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "browser-sync": "^2.26.7",
+    "eslint": "^6.8.0",
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-file-cache": "^0.0.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.2"
+  }
+}

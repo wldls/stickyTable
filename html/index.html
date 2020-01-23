@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="utf-8">
+	<title>sticky table</title>	
+	<link rel="stylesheet" type="text/css" href="/css/index.css">
+	<!-- <script src="/resources/script/jquery-1.12.4.min.js"></script> -->
+	<script src="/resources/script/jquery-3.4.1.min.js"></script>	
+	<script src="/resources/script/jquery.stickyTable.js"></script>
+</head>
+<body>
+<div id="wrap">
+	<!-- tbl_wrap -->
+	<div class="tbl_wrap list">
+		<table>
+		<thead>
+		<tr>
+			<th scope="col" class="td_chk">
+				<div class="td_inr">
+					<label class="lb_box">
+						<input type="checkbox" class="list_chk_all">
+						<span class="mark chk"></span>
+					</label>
+				</div>
+			</th>
+			<th scope="col"><div class="td_inr">test1</div></th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td class="td_chk">
+				<div class="td_inr">
+					<label class="lb_box">
+						<input type="checkbox" class="list_chk">
+						<span class="mark chk"></span>
+					</label>
+				</div>
+			</td>
+			<td><div class="td_inr">test1</div></td>
+		</tr>
+		</tbody>
+		</table>
+	</div>
+	<!-- //tbl_wrap -->
+</div>
+</body>
+</html>
