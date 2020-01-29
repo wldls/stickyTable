@@ -4,44 +4,118 @@
 	<meta charset="utf-8">
 	<title>sticky table</title>	
 	<link rel="stylesheet" type="text/css" href="/css/index.css">
-	<!-- <script src="/resources/script/jquery-1.12.4.min.js"></script> -->
-	<script src="/resources/script/jquery-3.4.1.min.js"></script>	
-	<script src="/resources/script/jquery.stickyTable.js"></script>
+	<script src="/js/jquery-1.12.4.min.js"></script>
+	<!-- <script src="/js/jquery-3.4.1.min.js"></script>	 -->
+	<script src="/js/lodash-4.17.11.min.js"></script>
+	<script src="/js/jquery.stickyTable.js"></script>
 </head>
 <body>
 <div id="wrap">
 	<!-- tbl_wrap -->
-	<div class="tbl_wrap list">
-		<table>
+	<div class="tbl_wrap">
+		<table class="table">
 		<thead>
 		<tr>
-			<th scope="col" class="td_chk">
-				<div class="td_inr">
-					<label class="lb_box">
-						<input type="checkbox" class="list_chk_all">
-						<span class="mark chk"></span>
-					</label>
-				</div>
-			</th>
-			<th scope="col"><div class="td_inr">test1</div></th>
+			<!-- <th scope="col" class="td_chk">
+				<input type="checkbox" class="list_chk_all">
+			</th> -->
+			<th scope="col">test</th>
+			<th scope="col" class="v1">test</th>
+			<th scope="col" class="v2">test</th>
+			<th scope="col">test</th>
+			<th scope="col">test</th>
+			<th scope="col">test</th>
+			<th scope="col">test</th>
+			<th scope="col">test</th>
+			<th scope="col">test</th>
+			<th scope="col">test</th>
 		</tr>
 		</thead>
 		<tbody>
 		<tr>
-			<td class="td_chk">
-				<div class="td_inr">
-					<label class="lb_box">
-						<input type="checkbox" class="list_chk">
-						<span class="mark chk"></span>
-					</label>
-				</div>
-			</td>
-			<td><div class="td_inr">test1</div></td>
+			<!-- <td class="td_chk">
+				<input type="checkbox" class="list_chk">
+			</td> -->
+			<td>test1</td>
+			<td class="v1">test2</td>
+			<td class="v2">test3</td>
+			<td>test4</td>
+			<td>test5</td>
+			<td>test6</td>
+			<td>test7</td>
+			<td>test8</td>
+			<td>test9</td>
+			<td>test10</td>
+		</tr>
+		<tr>
+			<!-- <td class="td_chk">
+				<input type="checkbox" class="list_chk">
+			</td> -->
+			<td>test1</td>
+			<td class="v1">test2</td>
+			<td class="v2">test3</td>
+			<td>test4</td>
+			<td>test5</td>
+			<td>test6</td>
+			<td>test7</td>
+			<td>test8</td>
+			<td>test9</td>
+			<td>test10</td>
+		</tr>
+		<tr>
+			<!-- <td class="td_chk">
+				<input type="checkbox" class="list_chk">
+			</td> -->
+			<td>test1</td>
+			<td class="v1">test2</td>
+			<td class="v2">test3</td>
+			<td>test4</td>
+			<td>test5</td>
+			<td>test6</td>
+			<td>test7</td>
+			<td>test8</td>
+			<td>test9</td>
+			<td>test10</td>
+		</tr>
+		<tr>
+			<!-- <td class="td_chk">
+				<input type="checkbox" class="list_chk">
+			</td> -->
+			<td>test1</td>
+			<td class="v1">test2</td>
+			<td class="v2">test3</td>
+			<td>test4</td>
+			<td>test5</td>
+			<td>test6</td>
+			<td>test7</td>
+			<td>test8</td>
+			<td>test9</td>
+			<td>test10</td>
+		</tr>
+		<tr>
+			<!-- <td class="td_chk">
+				<input type="checkbox" class="list_chk">
+			</td> -->
+			<td>test1</td>
+			<td class="v1">test2</td>
+			<td class="v2">test3</td>
+			<td>test4</td>
+			<td>test5</td>
+			<td>test6</td>
+			<td>test7</td>
+			<td>test8</td>
+			<td>test9</td>
+			<td>test10</td>
 		</tr>
 		</tbody>
 		</table>
 	</div>
 	<!-- //tbl_wrap -->
 </div>
+<script>
+$(function(){
+	$('.tbl_wrap').stickyTable();
+});
+</script>
 </body>
 </html>
