@@ -17,6 +17,7 @@ let floatingScrollProto = {
     },
 
     initWidget() {
+        // scroll div 생성
         let instance = this;
         let widget = instance.widget = $("<div class='fl-scrolls'></div>");
         $("<div></div>").appendTo(widget).css({width: `${instance.container.scrollWidth}px`});
@@ -128,11 +129,18 @@ let floatingScrollProto = {
         let instance = this;
         let {widget, container, scrollBody} = instance;
         let {clientWidth, scrollWidth} = container;
+
+
         widget.width(clientWidth);
+        
         if (!scrollBody) {
             widget.css("left", `${container.getBoundingClientRect().left}px`);
         }
+
+
         $("div", widget).width(scrollWidth);
+
+
         // Fit widget height to the native scroll bar height if needed
         if (scrollWidth > clientWidth) {
             widget.height(widget[0].offsetHeight - widget[0].clientHeight + 1); // +1px JIC

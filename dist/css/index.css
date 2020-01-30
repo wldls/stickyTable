@@ -34,7 +34,7 @@ label{cursor:pointer}
 /* layout */
 #wrap{padding:10px}
 /* .tbl_sticky{position:relative} */
-.tbl_wrap{overflow-x:auto;width:800px;margin:20px 0}
+.tbl_wrap{overflow-x:auto;margin:20px 0}
 .tbl_wrap table{table-layout:fixed}
 .tbl_wrap th,.tbl_wrap td{width:100px;padding:8px;border:1px solid #000;color:#575962;line-height:1rem;text-align:center}
 .tbl_wrap th{background:#f4f5f8}

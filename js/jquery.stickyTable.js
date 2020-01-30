@@ -5,8 +5,9 @@
 		stickyCellName : '.sticky_cell',
 		stickyCellTop : '.sticky_cell.top',
 		stickyCellEmpty : '',
-		left: 3,
+		left: 0,
 		right: 0,
+		isFloatingScroll:true,
 		waitTimer: 100
 	}
 
@@ -22,6 +23,9 @@
 			var that = this,
 				opt = that.options,
 				$element = that.e;
+
+			that.scrollVisible = true;
+			that.skipSyncContainer = that.skipSyncWidget = false;
 
 			// scroll top sticky-header 생성
 			var cloneHeader = $element.find('thead').clone();				
@@ -39,6 +43,10 @@
 			if(opt.left > 0){
 				that.stickyLeft();
 			}
+
+			if(opt.isFloatingScroll){
+				that.floatingScroll();				
+			}
 				
 			// 브라우저 넓이에 따라 table 넓이와 sticky header 넓이가 동일하게 유지
 			function resizeDone(){				
@@ -52,17 +60,20 @@
 
 			// 상하 스크롤에 따라 thead가 fixed되도록 함
 			that.stickyHeader();
-				
-			$(window).on('scroll', _.throttle(function(){
-				that.stickyHeader();
-			}, opt.waitTimer));
 
-			// 좌우 스크롤 동기화 : 스크롤 이동속도와 정확하게 일치해야 하므로 throttle은 사용하지 않음
 			var move = that.scrollMoveLeft();
+
 			$(window).on('scroll', function(){
 				// 브라우저 스크롤과 sticky header 좌우 스크롤 동기화
 				var left = $(window).scrollLeft();
 				
+				that.stickyHeader();
+
+				if(opt.isFloatingScroll){
+					that.checkVisibility();
+				}
+
+				// 좌우 스크롤 동기화
 				move(left);
 			});
 
@@ -71,6 +82,11 @@
 				var scrollLeftPos = $element.scrollLeft();
 				
 				$fixed.find('table').css('margin-left',-scrollLeftPos);
+
+				if(opt.isFloatingScroll && !that.skipSyncWidget){
+					that.syncWidget();
+					that.skipSyncWidget = false;
+				}
 			});
 		},
 		stickyHeader: function(){
@@ -159,6 +175,98 @@
 
 					beforeScrollLeft = afterScrollLeft;
 				}
+			}
+		},
+		floatingScroll: function(){
+			// 항상 element 하단에 붙는 가로 스크롤 막대 생성
+			var that = this,
+				$element = that.e;
+				widget = that.widget = $("<div class='fl-scrolls'></div>"); 
+
+			// fl-scrolls 하위에 div 생성
+			$("<div></div>").appendTo(widget).css({width:$element[0].scrollWidth+'px'});
+
+			// $element에 widget 추가
+			widget.appendTo($element);
+
+			// widget scroll 생성
+			that.resizeScroll();
+
+			// scroll 동기화
+			widget.on('scroll', function(){
+				if (that.scrollVisible && !that.skipSyncContainer) {
+					that.syncContainer();
+				}
+
+				that.skipSyncContainer = false;
+			});
+		},
+		resizeScroll: function(){
+			// 스크롤 넓이 또는 $elememt 크기가 변형될 때 다시 계산
+			var that = this,
+				$element = that.e,
+				widget = that.widget,
+				clientWidth = $element[0].clientWidth,
+				scrollWidth = $element[0].scrollWidth;
+
+				// widget 넓이, left position 설정
+				widget.width(clientWidth).css('left', $element[0].getBoundingClientRect().left + 'px');
+
+				// widget div width
+				$("div", widget).width(scrollWidth);
+
+				// 보이는 영역보다 실제 컨텐츠 영역이 크면 width height 값 추가
+				if (scrollWidth > clientWidth) {
+					// +1px JIC
+					widget.height(widget[0].offsetHeight - widget[0].clientHeight + 1);
+				}
+		},
+		syncContainer: function(){
+			var that = this,
+				$element = that.e,
+				scrollLeft = that.widget[0].scrollLeft;
+			
+			if($element[0].scrollLeft !== scrollLeft){
+				// element의 스크롤이벤트 핸들러가 위젯 스크롤 위치를 다시 동기화하지 못하도록 방지
+				that.skipSyncWidget = true;
+
+				// element의 스크롤이 widget의 스크롤의 위치가 같도록 조정
+				$element[0].scrollLeft = scrollLeft;
+			}
+		},
+		syncWidget: function(){
+			var that = this,
+				$element = that.e,
+				contScrollLeft = $element[0].scrollLeft,
+				scrollLeft = that.widget[0].scrollLeft;
+
+			if(scrollLeft !== contScrollLeft){
+				// widget의 스크롤이벤트 핸들러가 위젯 스크롤 위치를 다시 동기화하지 못하도록 방지
+				that.skipSyncContainer = true;
+
+				// widget의 스크롤이 elememt스크롤의 위치가 같도록 조정
+				that.widget[0].scrollLeft = contScrollLeft;
+			}
+		},
+		checkVisibility: function(){
+			var that = this,
+				$element = that.e,
+				widget = that.widget,
+				mustHide = (widget[0].scrollWidth <= widget[0].offsetWidth);
+
+			// widget 실제 넓이보다 보이는 럽이가 크면 숨김처리
+			if(!mustHide){
+				var elementRect = $element[0].getBoundingClientRect();	// element 좌표
+				var maxVisibleY = window.innerHeight || document.documentElement.clientHeight;	// 브라우저 높이
+
+				//세로 스크롤이 element 범위를 넘어가면 hide
+				mustHide = ((elementRect.bottom <= maxVisibleY) || (elementRect.top > maxVisibleY));
+			}
+
+			if (that.scrollVisible === mustHide) {
+				that.scrollVisible = !mustHide;
+				// 가로 스크롤일때는 반영되지 않음
+				widget.toggleClass("fl-scrolls-hidden");
 			}
 		}
 	}
