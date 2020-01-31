@@ -13,57 +13,60 @@
 </head>
 <body>
 <div id="wrap">
-	<!-- tbl_wrap -->
-	<div class="tbl_wrap">
-		<table>
-		<thead>
-		<tr>
-			<!-- <th scope="col" class="td_chk">
-				<input type="checkbox" class="list_chk_all">
-			</th> -->
-			<th scope="col">test</th>
-			<th scope="col" class="v1">test</th>
-			<th scope="col" class="v2">test</th>
-			<th scope="col">test</th>
-			<th scope="col">test</th>
-			<th scope="col">test</th>
-			<th scope="col">test</th>
-			<th scope="col">test</th>
-			<th scope="col">test</th>
-			<th scope="col">test</th>
-		</tr>
-		</thead>
-		<tbody>
-		<tr class="clone">
-			<!-- <td class="td_chk">
-				<input type="checkbox" class="list_chk">
-			</td> -->
-			<td>test1</td>
-			<td class="v1">test2</td>
-			<td class="v2">test3</td>
-			<td>test4</td>
-			<td>test5</td>
-			<td>test6</td>
-			<td>test7</td>
-			<td>test8</td>
-			<td>test9</td>
-			<td>test10</td>
-		</tr>
-		</tbody>
-		</table>
+	<div class="sticky_wrap">
+		<!-- tbl_wrap -->
+		<div class="tbl_wrap">
+			<table>
+			<thead>
+			<tr>
+				<!-- <th scope="col" class="td_chk">
+					<input type="checkbox" class="list_chk_all">
+				</th> -->
+				<th scope="col">test1</th>
+				<th scope="col" class="v1">test2</th>
+				<th scope="col" class="v2">test3</th>
+				<th scope="col">test4</th>
+				<th scope="col">test5</th>
+				<th scope="col">test6</th>
+				<th scope="col">test7</th>
+				<th scope="col">test8</th>
+				<th scope="col">test9</th>
+				<th scope="col">test10</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr class="clone">
+				<!-- <td class="td_chk">
+					<input type="checkbox" class="list_chk">
+				</td> -->
+				<td>test1</td>
+				<td class="v1">test2</td>
+				<td class="v2">test3</td>
+				<td>test4</td>
+				<td>test5</td>
+				<td>test6</td>
+				<td>test7</td>
+				<td>test8</td>
+				<td>test9</td>
+				<td>test10</td>
+			</tr>
+			</tbody>
+			</table>
+		</div>
+		<!-- //tbl_wrap -->
 	</div>
-	<!-- //tbl_wrap -->
 </div>
 <script>
 $(function(){
 	// row 동적생성 - test용
 	var clone = $('.clone').clone();
-	for(var i = 0; i < 100; i++){
+	for(var i = 0; i < 3; i++){
 		$('.tbl_wrap tbody').append('<tr>'+ clone[0].innerHTML +'</tr>');
 	}
 
 	$('.tbl_wrap').stickyTable({
-		left:3
+		left:2,
+		right:2
 	});
 	
 	// .floatingScroll();

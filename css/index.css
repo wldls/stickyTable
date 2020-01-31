@@ -33,7 +33,7 @@ label{cursor:pointer}
 
 /* layout */
 #wrap{padding:10px}
-/* .tbl_sticky{position:relative} */
+.sticky_wrap{position:relative;width:1000px}
 .tbl_wrap{overflow-x:auto;margin:20px 0}
 .tbl_wrap table{table-layout:fixed}
 .tbl_wrap th,.tbl_wrap td{width:100px;padding:8px;border:1px solid #000;color:#575962;line-height:1rem;text-align:center}
@@ -50,7 +50,8 @@ label{cursor:pointer}
 /* .tbl_wrap{margin-left:117px} */
 .tbl_wrap .v1{width:150px}
 .tbl_wrap .v2{width:180px}
-.tbl_wrap .sticky_cell{position:absolute;top:auto;left:10px}
+.tbl_wrap .sticky_cell{position:absolute;top:auto;left:0}
+.tbl_wrap .sticky_cell2{position:absolute;top:auto;right:0}
 
 
 /* .tbl_wrap .td_chk .td_inr{width:16px;height:16px;margin:0 auto} */

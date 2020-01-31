@@ -6,7 +6,7 @@
 		stickyCellTop : '.sticky_cell.top',
 		stickyCellEmpty : '',
 		left: 0,
-		right: 0,
+		// right: 0,
 		isFloatingScroll:true,
 		waitTimer: 100
 	}
@@ -42,6 +42,10 @@
 			// left 고정값이 있는 경우
 			if(opt.left > 0){
 				that.stickyLeft();
+			}
+
+			if(opt.right > 0){
+				that.stickyRight();
 			}
 
 			if(opt.isFloatingScroll){
@@ -107,44 +111,6 @@
 			}else{
 				$fixed.removeClass('on');
 			}
-		},		
-		stickyLeft:function(){
-			var that = this,
-				opt = that.options,
-				$element = that.e;
-
-			var totCellWidth = 0;		
-			var test = 0;
-
-			for(var i = 1; i <= opt.left; i++){
-				var $th = $element.find('th:nth-child('+i+')'),
-					$td = $element.find('td:nth-child('+i+')'),
-					className = 'sticky_cell',					
-					j = i-1; // i 0번째부터 시작
-
-				// 해당 셀에 sticky_cell 클래스 붙이기
-				$th.addClass(className);
-				$td.addClass(className);
-				
-				var eachCellWidth = $('.'+className).eq(j).outerWidth();	// 각 sticky_cell의 width 값
-				var posFstLeft = parseInt($('.'+className).css('left').replace('px',''));	// sticky_cell position left기본값
-
-				// 모든 sticky_cell width 더한 값
-				totCellWidth += (eachCellWidth - 1);
-
-				// 두 번째 셀부터 position left값 적용
-				if(j >= 1){
-					var beforeCellWidth = $('.'+className).eq(j).prev().outerWidth() - 1;
-					test = test += beforeCellWidth;
-
-					$('.'+className+':nth-child('+i+')').css('left', test + posFstLeft + 'px');
-				}
-			}
-
-			// sticky_cell갯수만큼 margin-left 설정, margin-left값만큼 width 값 줄어듦
-			var elWidth = $element.outerWidth();
-			$element.css({'width':elWidth - totCellWidth, 'margin-left':totCellWidth});
-
 		},
 		scrollMoveLeft : function(){
 			// 브라우저 스크롤 시 테이블 헤더 동기화
@@ -161,8 +127,8 @@
 					// 브라우저 좌우 스크롤 이동시 실행
 
 					var $headFixed = $(opt.fixedName),					
-							$headStickyCell = $(opt.fixedName).find(opt.stickyCellTop),
-							moveLeft = $element.offset().left - afterScrollLeft;
+						$headStickyCell = $(opt.fixedName).find(opt.stickyCellTop),
+						moveLeft = $element.offset().left - afterScrollLeft;
 
 					// tbl_sticky가 이동된 만큼 head도 이동
 					$headFixed.css('left', moveLeft);
@@ -176,7 +142,44 @@
 					beforeScrollLeft = afterScrollLeft;
 				}
 			}
-		},
+		},		
+		stickyLeft:function(){
+			var that = this,
+				opt = that.options,
+				$element = that.e;
+
+			var totCellWidth = 0;		
+			var cellPosLeft = 0;
+
+			for(var i = 1; i <= opt.left; i++){
+				var className = 'sticky_cell';
+
+				// 해당 셀에 sticky_cell 클래스 붙이기
+				$element.find('th:nth-child('+i+')').addClass(className);
+				$element.find('td:nth-child('+i+')').addClass(className);
+
+
+				var j = i - 1, // i 0번째부터 시작
+					stickyCell = $('.'+className)[j],
+					eachCellWidth = stickyCell.offsetWidth;	// 각 sticky_cell의 width 값
+					// defaultLeft = $element[0].getBoundingClientRect().left;	// $element position left
+
+				// 모든 sticky_cell width 더한 값
+				totCellWidth += (eachCellWidth - 1);
+				
+				// 두 번째 셀부터 position left값 적용
+				if(j >= 1){
+					var beforeCellWidth = stickyCell.previousElementSibling.offsetWidth - 1;
+					cellPosLeft = cellPosLeft += beforeCellWidth;
+
+					// $('.'+className+':nth-child('+ i +')').css('left', cellPosLeft + defaultLeft + 'px');
+					$('.'+className+':nth-child('+ i +')').css('left', cellPosLeft + 'px');
+				}
+			}
+
+			// sticky_cell갯수만큼 margin-left 설정
+			$element.css({'margin-left':totCellWidth});
+		},		
 		floatingScroll: function(){
 			// 항상 element 하단에 붙는 가로 스크롤 막대 생성
 			var that = this,
@@ -188,6 +191,9 @@
 
 			// $element에 widget 추가
 			widget.appendTo($element);
+
+			// floatingScroll show hide 여부 확인
+			that.checkVisibility();
 
 			// widget scroll 생성
 			that.resizeScroll();
