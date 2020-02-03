@@ -6,7 +6,7 @@
 		stickyCellTop : '.sticky_cell.top',
 		stickyCellEmpty : '',
 		left: 0,
-		right: 0,
+		// right: 0,
 		isFloatingScroll:true,
 		waitTimer: 100
 	}
@@ -127,8 +127,8 @@
 					// 브라우저 좌우 스크롤 이동시 실행
 
 					var $headFixed = $(opt.fixedName),					
-							$headStickyCell = $(opt.fixedName).find(opt.stickyCellTop),
-							moveLeft = $element.offset().left - afterScrollLeft;
+						$headStickyCell = $(opt.fixedName).find(opt.stickyCellTop),
+						moveLeft = $element.offset().left - afterScrollLeft;
 
 					// tbl_sticky가 이동된 만큼 head도 이동
 					$headFixed.css('left', moveLeft);
@@ -179,48 +179,7 @@
 
 			// sticky_cell갯수만큼 margin-left 설정
 			$element.css({'margin-left':totCellWidth});
-		},
-		stickyRight: function(){
-			var that = this,
-				opt = that.options,
-				$element = that.e;
-
-			var totCellWidth = 0;		
-			var cellPosRight = 0;
-			
-			for(var i = 1; i <= opt.right; i++){
-				var className = 'sticky_cell2';
-				var j = i - 1; // i 0번째부터 시작
-
-				
-				var rightCount = $element.find('table')[0].rows[0].cells.length - j;
-
-				// 해당 셀에 sticky_cell 클래스 붙이기
-				$element.find('th:nth-child('+ rightCount +')').addClass(className);
-				$element.find('td:nth-child('+ rightCount +')').addClass(className);
-				
-				var stickyCell = $('.'+className)[i],
-					eachCellWidth = stickyCell.offsetWidth,	// 각 sticky_cell의 width 값
-					defaultRight = $element[0].getBoundingClientRect().right;	// $element position right
-
-				// 모든 sticky_cell width 더한 값
-				totCellWidth += (eachCellWidth - 1);
-				
-				// 두 번째 셀부터 position right 적용
-				if(j < 1){
-					var beforeCellWidth = stickyCell.previousElementSibling.offsetWidth - 1;
-					
-					console.log(beforeCellWidth);
-
-					cellPosRight = cellPosRight += beforeCellWidth;
-
-					$('.'+className+':nth-child('+ rightCount +')').css('right', cellPosRight + defaultRight + 'px');
-				}
-			}
-
-			// sticky_cell갯수만큼 margin-left 설정
-			$element.css({'margin-right':totCellWidth});
-		},
+		},		
 		floatingScroll: function(){
 			// 항상 element 하단에 붙는 가로 스크롤 막대 생성
 			var that = this,
