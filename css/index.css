@@ -50,8 +50,9 @@ label{cursor:pointer}
 /* .tbl_wrap{margin-left:117px} */
 .tbl_wrap .v1{width:150px}
 .tbl_wrap .v2{width:180px}
-.tbl_wrap .sticky_cell{position:absolute;top:auto;left:0}
-.tbl_wrap .sticky_cell2{position:absolute;top:auto;right:0}
+.tbl_wrap .sticky_cell{position:absolute;top:auto}
+.tbl_wrap .sticky_cell[data-fix="left"]{left:0}
+.tbl_wrap .sticky_cell[data-fix="right"]{right:0}
 
 
 /* .tbl_wrap .td_chk .td_inr{width:16px;height:16px;margin:0 auto} */

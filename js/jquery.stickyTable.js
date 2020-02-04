@@ -9,7 +9,7 @@
 		right: 0,
 		isFloatingScroll:true,
 		isOuterScroll:true,
-		waitTimer: 100
+		waitTimer: 250
 	}
 
 	function Plugin(element, options){		
@@ -48,9 +48,9 @@
 			}
 
 			// right cell을 고정하고 싶은 경우
-			// if(opt.right > 0){
-			// 	that.stickyRight();
-			// }
+			if(opt.right > 0){
+				that.stickyRight();
+			}
 
 			// 브라우저 y축 스크롤을 움직일 때 x축 스크롤을 항상 붙일지 여부에 따라 함수 실행
 			if(opt.isFloatingScroll){
@@ -67,31 +67,30 @@
 
 				var timer = null;
 				$(window).on('resize',function(e){
-					//300밀리초마다 resize실행 여부를 확인
+					// waitTimer 밀리초마다 resize실행 여부를 확인
 					clearTimeout(timer);
 					timer = setTimeout(resizeDone, opt.waitTimer);
 				});
 
-			})()
-
-			// 상하 스크롤에 따라 thead가 fixed되도록 함
-			that.stickyHeader();
-
-			var move = that.scrollMoveLeft();
-
-			$(window).on('scroll', function(){
-				// 브라우저 스크롤과 sticky header 좌우 스크롤 동기화
-				var left = $(window).scrollLeft();
-				
+				// 상하 스크롤에 따라 thead가 fixed되도록 함
 				that.stickyHeader();
+				var move = that.scrollMoveLeft();
 
-				if(opt.isFloatingScroll){
-					that.checkVisibility();
-				}
+				$(window).on('scroll', function(){
+					// 브라우저 스크롤과 sticky header 좌우 스크롤 동기화
+					var left = $(window).scrollLeft();
+					
+					that.stickyHeader();
 
-				// 좌우 스크롤 동기화
-				move(left);
-			});
+					if(opt.isFloatingScroll){
+						that.resizeScroll();
+						that.checkVisibility();
+					}
+
+					// 좌우 스크롤 동기화
+					move(left);
+				});
+			})()
 
 			$element.on('scroll', function(){
 				// table과 sticky header 좌우 스크롤 동기화
@@ -129,35 +128,45 @@
 				$element = that.e;
 
 			var beforeScrollLeft  = 0;
-			// var stickyCellWidth = $(opt.stickyCellTop + ':visible').outerWidth();
 
 			return function(afterScrollLeft){
 
 				if(beforeScrollLeft !== afterScrollLeft){
 					// 브라우저 좌우 스크롤 이동시 실행
 					var $headFixed = $(opt.fixedName),					
-						$headStickyCell = $(opt.fixedName).find(opt.stickyCellTop),
-						moveLeft = $element.offset().left - afterScrollLeft,
+						$headLeftCell = $(opt.fixedName).find(opt.stickyCellTop+'[data-fix="left"]'),	// left 이동
+						$headRightCell = $(opt.fixedName).find(opt.stickyCellTop+'[data-fix="right"]'),	// right 이동
+						moveLeft = $element.offset().left - afterScrollLeft,						
 						elementMarginLeft = $element.offset().left - $element[0].offsetLeft;
 
 					// tbl_sticky가 이동된 만큼 head도 이동
 					$headFixed.css('left', moveLeft);					
 
 					// 0번째는 width가 아닌 element위치가 기준
-					$headStickyCell.eq(0).css('left', elementMarginLeft - afterScrollLeft);
+					$headLeftCell.eq(0).css('left', elementMarginLeft - afterScrollLeft);
 
 					// fixed된 stickyCell left 값 조정
-					$headStickyCell.each(function(idx, item){
+					$headLeftCell.each(function(idx, item){
 						if(idx !== 0){
 							var stickyCellWidth = $(item).outerWidth();
 
 							if(opt.stickyCellEmpty === ''){
-								$(item).css('left', moveLeft - stickyCellWidth + 1);
-								
-							}else{						
+								$(item).css('left', moveLeft - stickyCellWidth + 1);								
+							}else{
 								$(item).add(opt.stickyCellEmpty).css('left', moveLeft - stickyCellWidth + 1);
 							}	
 						}						
+					});
+
+					$headRightCell.each(function(idx, item){
+						var cellPosRight = parseInt($(item).css('right').replace('px'));
+						var move = afterScrollLeft - beforeScrollLeft;
+
+						if(opt.stickyCellEmpty === ''){
+							$(item).css('right', cellPosRight + move + 'px');								
+						}else{
+							$(item).add(opt.stickyCellEmpty).css('left', cellPosRight + move + 'px');
+						}
 					});
 
 					beforeScrollLeft = afterScrollLeft;
@@ -172,18 +181,18 @@
 				totCellWidth = 0,
 				cellPosLeft = 0,
 				className = opt.stickyCellName.replace(/\./g, ' ').trim(),
-				classTopName = opt.stickyCellTop.replace(/\./g, ' ').trim();
-
+				classTopName = opt.stickyCellTop.replace(/\./g, ' ').trim()
+				tblPos = $element[0].getBoundingClientRect().left; // table left 위치
+			
 			for(var i = 1; i <= opt.left; i++){				
 				// 해당 셀에 sticky_cell 클래스 붙이기
-				$element.find('th:nth-child('+i+')').addClass(classTopName);
-				$element.find('td:nth-child('+i+')').addClass(className);
+				$element.find('th:nth-child('+i+')').addClass(classTopName).attr('data-fix', 'left');
+				$element.find('td:nth-child('+i+')').addClass(className).attr('data-fix', 'left');
 
 				var j = i - 1, // i 0번째부터 시작
 					stickyCell = $(opt.stickyCellName)[j],
-					eachCellWidth = stickyCell.offsetWidth,	// 각 sticky_cell의 width 값
-					tblPos = $element[0].getBoundingClientRect().left;	// table left 위치
-
+					eachCellWidth = stickyCell.offsetWidth;	// 각 sticky_cell의 width 값
+						
 				// 모든 sticky_cell width 더한 값
 				totCellWidth += (eachCellWidth - 1);
 
@@ -210,34 +219,38 @@
 			var that = this,
 				opt = that.options,
 				$element = that.e,
+				$fixed = $element.find(opt.fixedName),
 				totCellWidth = 0,
-				cellPosRight = 0,
+				classTopName = opt.stickyCellTop.replace(/\./g, ' ').trim(),
 				className = opt.stickyCellName.replace(/\./g, ' ').trim(),
-				classTopName = opt.stickyCellTop.replace(/\./g, ' ').trim();
+				tblPos = $(window).width() - $element[0].getBoundingClientRect().right, // table right 위치
+				totalCellCount = $element.find('table')[0].rows[0].cells.length;	// cell 갯수
 			
 			for(var i = 1; i <= opt.right; i++){
-				var className = 'sticky_cell2';
-				var j = i - 1; // i 0번째부터 시작
-				var rightCount = $element.find('table')[0].rows[0].cells.length - j;
+				var rightCount = totalCellCount - (i - 1);
 
 				// 해당 셀에 sticky_cell 클래스 붙이기
-				$element.find('th:nth-child('+ rightCount +')').addClass(classTopName);
-				$element.find('td:nth-child('+ rightCount +')').addClass(className);
+				$element.find('th:nth-child('+ rightCount +')').addClass(classTopName).attr('data-fix', 'right');
+				$element.find('td:nth-child('+ rightCount +')').addClass(className).attr('data-fix', 'right');
 				
-				var stickyCell = $('.'+className)[i],
-					eachCellWidth = stickyCell.offsetWidth,	// 각 sticky_cell의 width 값
-					defaultRight = $element[0].getBoundingClientRect().right;	// $element position right
+				var stickyCell = $(opt.stickyCellName+'[data-fix="right"]')[i],
+					eachCellWidth = stickyCell.offsetWidth;	// 각 sticky_cell의 width 값
 
 				// 모든 sticky_cell width 더한 값
 				totCellWidth += (eachCellWidth - 1);
-				
-				// 두 번째 셀부터 position right 적용
-				if(j < 1){
-					var beforeCellWidth = stickyCell.previousElementSibling.offsetWidth - 1;
-					
-					cellPosRight = cellPosRight += beforeCellWidth;
 
-					$('.'+className+':nth-child('+ rightCount +')').css('right', cellPosRight + defaultRight + 'px');
+				// 맨 뒤에서 두 번째 셀부터 position right 적용
+				if(rightCount < totalCellCount){
+					var cellPosRight = totCellWidth - eachCellWidth;
+
+					$(opt.stickyCellTop + ':nth-child('+ rightCount +')').css('right', cellPosRight + 'px');
+					$(opt.stickyCellName + ':nth-child('+ rightCount +')').css('right', cellPosRight + 'px');
+
+					// fixed_header의 경우 fixed값이므로 table left값을 추가
+					$fixed.find(opt.stickyCellTop + ':nth-child('+ rightCount +')').css('right', cellPosRight + tblPos + 'px');
+				}else{
+					// 맨 마지막은 table이 기본값
+					$fixed.find(opt.stickyCellTop + ':nth-child('+ totalCellCount +')').css('right', tblPos + 'px');
 				}
 			}
 
@@ -256,11 +269,11 @@
 			// $element에 widget 추가
 			widget.appendTo($element);
 
-			// floatingScroll show hide 여부 확인
-			that.checkVisibility();
-
 			// widget scroll 생성
 			that.resizeScroll();
+
+			// floatingScroll show hide 여부 확인
+			that.checkVisibility();
 
 			// scroll 동기화
 			widget.on('scroll', function(){
@@ -324,7 +337,7 @@
 				widget = that.widget,
 				mustHide = (widget[0].scrollWidth <= widget[0].offsetWidth);
 
-			// widget 실제 넓이보다 보이는 럽이가 크면 숨김처리
+			// widget 실제 넓이보다 보이는 넓이가 크면 숨김처리
 			if(!mustHide){
 				var elementRect = $element[0].getBoundingClientRect();	// element 좌표
 				var maxVisibleY = window.innerHeight || document.documentElement.clientHeight;	// 브라우저 높이
