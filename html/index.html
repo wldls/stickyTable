@@ -9,11 +9,10 @@
 	<!-- <script src="/js/jquery-3.4.1.min.js"></script>	 -->
 	<script src="/js/lodash-4.17.11.min.js"></script>
 	<script src="/js/jquery.stickyTable.js"></script>
-	<script src="/js/jquery.floatingscroll.min.js"></script>
 </head>
 <body>
 <div id="wrap">
-	<div class="sticky_wrap">
+	<div class="sticky_wrap1">
 		<!-- tbl_wrap -->
 		<div class="tbl_wrap">
 			<table>
@@ -31,7 +30,7 @@
 				<th scope="col">test7</th>
 				<th scope="col">test8</th>
 				<th scope="col" class="v2">test9</th>
-				<th scope="col" class="v1">test10</th>
+				<th scope="col">test10</th>
 			</tr>
 			</thead>
 			<tbody>
@@ -48,7 +47,7 @@
 				<td>test7</td>
 				<td>test8</td>
 				<td class="v2">test9</td>
-				<td class="v1">test10</td>
+				<td>test10</td>
 			</tr>
 			</tbody>
 			</table>
@@ -64,9 +63,10 @@ $(function(){
 		$('.tbl_wrap tbody').append('<tr>'+ clone[0].innerHTML +'</tr>');
 	}
 
-	$('.tbl_wrap').stickyTable({
+	$('.tbl_wrap').stickyTable({		
 		left:2,
-		right:1
+		right:1,
+		isFloatingScroll:true
 	});
 });
 </script>
