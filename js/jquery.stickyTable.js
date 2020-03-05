@@ -66,11 +66,6 @@
 				that.stickyRight();
 			}
 
-			// 브라우저 y축 스크롤을 움직일 때 x축 스크롤을 항상 붙일지 여부에 따라 함수 실행
-			if(opt.isFloatingScroll){
-				that.floatingScroll();				
-			}
-
 			(function(){
 				// 브라우저 넓이에 따라 table 넓이와 sticky header 넓이가 동일하게 유지
 				function resizeDone(){
@@ -87,7 +82,7 @@
 					timer = setTimeout(resizeDone, opt.waitTimer);
 				});
 
-				// 상하 스크롤에 따라 thead가 fixed되도록 함
+				// 상하 스크롤에 따라 thead가 fixed되도록 함				
 				that.stickyHeader();
 				var move = that.scrollMoveLeft();
 
@@ -107,6 +102,11 @@
 				});
 			})()
 
+			// 브라우저 y축 스크롤을 움직일 때 x축 스크롤을 항상 붙일지 여부에 따라 함수 실행
+			if(opt.isFloatingScroll){
+				that.floatingScroll();				
+			}
+
 			$element.on('scroll', function(){
 				// table과 sticky header 좌우 스크롤 동기화
 				var scrollLeftPos = $element.scrollLeft();
@@ -115,7 +115,8 @@
 
 				if(opt.isFloatingScroll && !that.skipSyncWidget){
 					that.syncWidget();
-					that.skipSyncWidget = false;
+					// that.skipSyncWidget = false;
+					that.skipSyncContainer = false;
 				}
 			});
 		},
@@ -127,9 +128,9 @@
 				$fixed = $element.find(opt.fixedName),
 				scrollTop = $(window).scrollTop(),
 				tblOfsTop = $element.offset().top,
-				headerHeight = opt.headerName !== '' ? $(opt.headerName).outerHeight() : 0,
+				headerHeight = !$(opt.headerName) ? $(opt.headerName).outerHeight() : 0,
 				fixedStart = tblOfsTop - headerHeight;
-				
+
 			if(scrollTop > fixedStart){
 				// thead높이보다 스크롤 높이가 높은 경우 fixed div show
 				$fixed.addClass('on');
@@ -286,7 +287,7 @@
 					that.syncContainer();
 				}
 
-				that.skipSyncContainer = false;
+				that.skipSyncWidget = false;
 			});
 		},
 		resizeScroll: function(){
