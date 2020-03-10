@@ -40,18 +40,17 @@
 			}
 
 			if(opt.isOuterScroll){
-				// scroll top sticky-header 생성
-				var headerHeight = opt.headerName !== '' ? $(opt.headerName).outerHeight() : 0;
-				var cloneHeader = $element.find('thead').clone();
+				// scroll top sticky-header 생성				
+				var	cloneHeader = $element.find('thead').clone(),
+					tableClassName = $element.find('table')[0].className;
+
 				var html = ' <div class="'+ opt.fixedName.replace(/\./g, '') +' on">';
-					html += '	<table>';
+					html += '	<table' + ( tableClassName ? ' class="'+ tableClassName +'"' : '' ) +'>';
 					html += 	cloneHeader[0].outerHTML;
 					html += '	</table>';
 					html += '</div>';
 							
 				$element.prepend(html);
-				
-				$(opt.fixedName).css('top', headerHeight + 'px')
 			}
 			
 			var $fixed = $element.find(opt.fixedName);
@@ -65,12 +64,19 @@
 			if(opt.right > 0){
 				that.stickyRight();
 			}
-
+			
 			(function(){
 				// 브라우저 넓이에 따라 table 넓이와 sticky header 넓이가 동일하게 유지
 				function resizeDone(){
 					$fixed.css('width', $element[0].offsetWidth);
 					that.rightPos();
+					that.stickyHeader();
+					
+					if(opt.isFloatingScroll){
+						// 브라우저 y축 스크롤을 움직일 때 x축 스크롤을 항상 하단에 고정
+						$('.fl-scrolls').remove();						
+						that.floatingScroll();
+					}
 				}
 	
 				resizeDone();
@@ -82,8 +88,7 @@
 					timer = setTimeout(resizeDone, opt.waitTimer);
 				});
 
-				// 상하 스크롤에 따라 thead가 fixed되도록 함				
-				that.stickyHeader();
+				// 상하 스크롤에 따라 thead가 fixed되도록 함
 				var move = that.scrollMoveLeft();
 
 				$(window).on('scroll', function(){
@@ -92,7 +97,7 @@
 					
 					that.stickyHeader();
 
-					if(opt.isFloatingScroll){
+					if(opt.isFloatingScroll){						
 						that.resizeScroll();
 						that.checkVisibility();
 					}
@@ -101,12 +106,7 @@
 					move(left);
 				});
 			})()
-
-			// 브라우저 y축 스크롤을 움직일 때 x축 스크롤을 항상 붙일지 여부에 따라 함수 실행
-			if(opt.isFloatingScroll){
-				that.floatingScroll();				
-			}
-
+			
 			$element.on('scroll', function(){
 				// table과 sticky header 좌우 스크롤 동기화
 				var scrollLeftPos = $element.scrollLeft();
@@ -128,12 +128,13 @@
 				$fixed = $element.find(opt.fixedName),
 				scrollTop = $(window).scrollTop(),
 				tblOfsTop = $element.offset().top,
-				headerHeight = !$(opt.headerName) ? $(opt.headerName).outerHeight() : 0,
+				headerHeight = $(opt.headerName).length ? $(opt.headerName).outerHeight() : 0,
 				fixedStart = tblOfsTop - headerHeight;
-
+				
 			if(scrollTop > fixedStart){
 				// thead높이보다 스크롤 높이가 높은 경우 fixed div show
 				$fixed.addClass('on');
+				$(opt.fixedName).css('top', headerHeight + 'px');
 
 			}else{
 				$fixed.removeClass('on');
@@ -342,20 +343,25 @@
 				$element = that.e,
 				widget = that.widget,
 				mustHide = (widget[0].scrollWidth <= widget[0].offsetWidth);
-
-			// widget 실제 넓이보다 보이는 넓이가 크면 숨김처리
+									
 			if(!mustHide){
-				var elementRect = $element[0].getBoundingClientRect();	// element 좌표
+				var elementRect = $element[0].getBoundingClientRect();	// element 좌표				
 				var maxVisibleY = window.innerHeight || document.documentElement.clientHeight;	// 브라우저 높이
-
+				
 				//세로 스크롤이 element 범위를 넘어가면 hide
 				mustHide = ((elementRect.bottom <= maxVisibleY) || (elementRect.top > maxVisibleY));
 			}
-
+			
 			if (that.scrollVisible === mustHide) {
-				that.scrollVisible = !mustHide;
-				// 가로 스크롤일때는 반영되지 않음
-				widget.toggleClass("fl-scrolls-hidden");
+				// y스크롤이 하단에 위치하면 floatingScroll 노출 해제
+				that.scrollVisible = !mustHide;							
+			}
+			
+			// toggleClass를 사용하면 resize에서 제대로 작동하지 않으므로 분리
+			if(that.scrollVisible){
+				widget.removeClass("fl-scrolls-hidden");	
+			}else{
+				widget.addClass("fl-scrolls-hidden");
 			}
 		}
 	}

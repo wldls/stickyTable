@@ -14,32 +14,43 @@
 	<div class="sticky_wrap">
 		<!-- tbl_wrap -->
 		<div class="tbl_wrap">
-			<table>
+			<table class="tbl_fixed v1">
 			<thead>
 			<tr>				
+				<th scope="col" colspan="2">test1</th>				
+				<th scope="col" class="w2">test3</th>
+				<th scope="col" class="w1">test4</th>
+				<th scope="col">test5</th>
+				<th scope="col">test6</th>
+				<th scope="col">test7</th>
+				<th scope="col">test8</th>
+				<th scope="col" class="w2">test9</th>
+				<th scope="col">test10</th>
+			</tr>
+			<!-- <tr>				
 				<th scope="col">test1</th>
-				<th scope="col" class="v1">test2</th>
-				<th scope="col" class="v2">test3</th>
+				<th scope="col" class="w1">test2</th>
+				<th scope="col" class="w2">test3</th>
 				<th scope="col">test4</th>
 				<th scope="col">test5</th>
 				<th scope="col">test6</th>
 				<th scope="col">test7</th>
 				<th scope="col">test8</th>
-				<th scope="col" class="v2">test9</th>
+				<th scope="col" class="w2">test9</th>
 				<th scope="col">test10</th>
-			</tr>
+			</tr> -->
 			</thead>
 			<tbody>
 			<tr class="clone">				
 				<td>test1</td>
-				<td class="v1">test2</td>
-				<td class="v2">test3</td>
-				<td>test4</td>
+				<td>test2</td>
+				<td class="w2">test3</td>
+				<td class="w1">test4</td>
 				<td>test5</td>
 				<td>test6</td>
 				<td>test7</td>
 				<td>test8</td>
-				<td class="v2">test9</td>
+				<td class="w2">test9</td>
 				<td>test10</td>
 			</tr>
 			</tbody>
@@ -57,9 +68,8 @@ $(function(){
 	}
 
 	$('.tbl_wrap').stickyTable({		
-		left:2,
-		right:1,
-		isFloatingScroll:true
+		// left:2,
+		// right:1,
 	});
 });
 </script>

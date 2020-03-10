@@ -24,11 +24,14 @@ label{cursor:pointer}
 #wrap{padding:10px 20px}
 .sticky_wrap{position:relative;width:1000px}
 .tbl_wrap{overflow-x:auto;margin:20px 0}
-.tbl_wrap table{table-layout:fixed}
+.tbl_wrap>table{table-layout:fixed}
 .tbl_wrap th,.tbl_wrap td{width:100px;padding:8px;border:1px solid #000;color:#575962;line-height:1rem;text-align:center}
 .tbl_wrap th{background:#f4f5f8}
 .tbl_wrap td{background:#fff}
 .tbl_wrap .td_chk{width:35px}
+.tbl_fixed{table-layout:fixed}
+.tbl_fixed.v1{table-layout:fixed}
+
 
 /* top 고정 */
 .tbl_wrap .head_fixed{display:none;overflow:hidden;position:fixed;top:0;z-index:10}
@@ -36,6 +39,6 @@ label{cursor:pointer}
 .tbl_wrap .head_fixed .sticky_cell{position:fixed}
 
 /* cell 고정 */
-.tbl_wrap .v1{width:150px}
-.tbl_wrap .v2{width:180px}
+.tbl_wrap .w1{width:150px}
+.tbl_wrap .w2{width:180px}
 .tbl_wrap .sticky_cell{position:absolute;top:auto;left:0}
