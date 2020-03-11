@@ -94,10 +94,10 @@
 				$(window).on('scroll', function(){
 					// 브라우저 스크롤과 sticky header 좌우 스크롤 동기화
 					var left = $(window).scrollLeft();
-					
+
 					that.stickyHeader();
 
-					if(opt.isFloatingScroll){						
+					if(opt.isFloatingScroll){
 						that.resizeScroll();
 						that.checkVisibility();
 					}
@@ -114,10 +114,10 @@
 				$fixed.find('table').css('margin-left',-scrollLeftPos);
 
 				if(opt.isFloatingScroll && !that.skipSyncWidget){
-					that.syncWidget();
-					// that.skipSyncWidget = false;
-					that.skipSyncContainer = false;
+					that.syncWidget();				
 				}
+
+				that.skipSyncWidget = false;
 			});
 		},
 		stickyHeader: function(){
@@ -284,11 +284,11 @@
 
 			// scroll 동기화
 			widget.on('scroll', function(){
-				if (that.scrollVisible && !that.skipSyncContainer) {
-					that.syncContainer();
+				if (that.scrollVisible && !that.skipSyncContainer) {					
+					that.syncContainer();					
 				}
 
-				that.skipSyncWidget = false;
+				that.skipSyncContainer = false;
 			});
 		},
 		resizeScroll: function(){
