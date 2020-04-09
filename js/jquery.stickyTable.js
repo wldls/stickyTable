@@ -78,9 +78,11 @@
 					$fixed.css('width', opt.isInnerScroll ? $element[0].offsetWidth - 17 : $element[0].offsetWidth);
 					that.rightPos();
 
+					// 브라우저 y축 스크롤을 움직일 때 x축 스크롤을 항상 하단에 고정
 					if(opt.isFloatingScroll){
-						// 브라우저 y축 스크롤을 움직일 때 x축 스크롤을 항상 하단에 고정
-						$('.fl-scrolls').remove();						
+						
+
+						// floating
 						that.floatingScroll();
 					}
 					
@@ -135,9 +137,9 @@
 				// element scroll시 thead fixed
 				if(opt.isInnerScroll){
 					if($element.scrollTop() <= 0){
-						$(opt.fixedName).removeClass('on inr');	
+						$element.find(opt.fixedName).removeClass('on inr');	
 					}else{
-						$(opt.fixedName).addClass('on inr');						
+						$element.find(opt.fixedName).addClass('on inr');						
 					}
 				}
 			});
@@ -160,8 +162,7 @@
 
 			if(scrollTop > fixedStart){
 				// thead높이보다 스크롤 높이가 높은 경우 fixed div show
-				$fixed.addClass('on');
-				$(opt.fixedName).css('top', headerHeight + 'px');
+				$fixed.addClass('on').css('top', headerHeight + 'px');
 				
 				// $fixed 생성되면 fixed height값 재설정
 				fixedHeight = $fixed[0].offsetHeight;
@@ -184,8 +185,8 @@
 
 				if(beforeScrollLeft !== afterScrollLeft){
 					// 브라우저 좌우 스크롤 이동시 실행
-					var $headFixed = $(opt.fixedName),					
-						$headStickyCell = $(opt.fixedName).find(opt.stickyCellTop),	// right 이동
+					var $headFixed = $element.find(opt.fixedName),
+						$headStickyCell = $headFixed.find(opt.stickyCellTop),	// right 이동
 						moveLeft = $element.offset().left - afterScrollLeft;
 					
 					// tbl_sticky가 이동된 만큼 head도 이동
@@ -215,7 +216,7 @@
 				cellPosLeft = 0,
 				className = opt.stickyCellName.replace(/\./g, ' ').trim(),
 				classTopName = opt.stickyCellTop.replace(/\./g, ' ').trim(),
-				tblPos = $(opt.container).length ? $(opt.container)[0].getBoundingClientRect().left : 0; // table left 위치				
+				tblPos = $element.parents(opt.container).length ? $element.parents(opt.container)[0].getBoundingClientRect().left : 0; // table left 위치				
 						
 			for(var i = 1; i <= opt.left; i++){				
 				// 해당 셀에 sticky_cell 클래스 붙이기
@@ -237,8 +238,8 @@
 					
 					cellPosLeft = cellPosLeft += beforeCellWidth;
 					
-					$(opt.stickyCellTop + ':nth-child('+ i +')').css('left', cellPosLeft + 'px');
-					$(opt.stickyCellName + ':nth-child('+ i +')').css('left', cellPosLeft + 'px');
+					$element.find(opt.stickyCellTop + ':nth-child('+ i +')').css('left', cellPosLeft + 'px');
+					$element.find(opt.stickyCellName + ':nth-child('+ i +')').css('left', cellPosLeft + 'px');
 
 					// fixed_header의 경우 fixed값이므로 table left값을 추가
 					$fixed.find(opt.stickyCellTop + ':nth-child('+ i +')').css('left', cellPosLeft + tblPos + 'px');
@@ -269,25 +270,26 @@
 			var that = this,
 				opt = that.options,
 				$element = that.e,
+				$container = $element.parents(opt.container),
 				$fixed = $element.find(opt.fixedName),
 				totCellWidth = 0,
-				tblPos = $(opt.container).length ? $(opt.container)[0].getBoundingClientRect().left : 0, // table left 위치
-				tblPosRight = $(opt.container).length ? $(opt.container)[0].getBoundingClientRect().right : 0, // table left 위치
+				tblPos = $container.length ? $container[0].getBoundingClientRect().left : 0, // table left 위치
+				tblPosRight = $container.length ? $container[0].getBoundingClientRect().right : 0, // table left 위치
 				totalCellCount = $element.find('table')[0].rows[0].cells.length;	// cell 갯수
 	
 			for(var i = 1; i <= opt.right; i++){
 				var j = i - 1;	// 0부터 시작
 				var rightCount = totalCellCount - j;	
 	
-				var stickyCell = $(opt.stickyCellName+'[data-fix="right"]:not(".top")')[j],
+				var stickyCell = $element.find(opt.stickyCellName+'[data-fix="right"]:not(".top")')[j],
 					eachCellWidth = stickyCell ? stickyCell.offsetWidth : 0;	// 각 sticky_cell의 width 값
 									
 				totCellWidth += (eachCellWidth - 1);
 				
 				var cellPosRight = tblPosRight - totCellWidth - tblPos;
 								
-				$(opt.stickyCellTop + ':nth-child('+ rightCount +')').css('left', cellPosRight + 'px');
-				$(opt.stickyCellName + ':nth-child('+ rightCount +')').css('left', cellPosRight + 'px');
+				$element.find(opt.stickyCellTop + ':nth-child('+ rightCount +')').css('left', cellPosRight + 'px');
+				$element.find(opt.stickyCellName + ':nth-child('+ rightCount +')').css('left', cellPosRight + 'px');
 	
 				// fixed_header의 경우 fixed값이므로 table left값을 추가
 				$fixed.find(opt.stickyCellTop + ':nth-child('+ rightCount +')').css('left', cellPosRight + tblPos + 'px');				
@@ -300,7 +302,14 @@
 			// 항상 element 하단에 붙는 가로 스크롤 막대 생성
 			var that = this,
 				$element = that.e;
-				widget = that.widget = $("<div class='fl-scrolls'></div>"); 
+				widget = that.widget = $("<div class='fl-scrolls'></div>"),
+				$flScrolls = $element.find('.fl-scrolls');
+
+			// window rezise시 기존 widget삭제 후 재생성
+			if(!!$flScrolls.length){
+				// init
+				$flScrolls.remove();
+			}
 
 			// fl-scrolls 하위에 div 생성
 			$("<div></div>").appendTo(widget).css({width:$element[0].scrollWidth+'px'});
