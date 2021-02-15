@@ -191,8 +191,6 @@
             border = Number($(el).css("border-right-width").replace("px", "")),
             mergeWidth = 0;
 
-          console.log(border);
-
           for (var i = 0; i < mergeCell; i++) {
             // 양 끝 셀의 한쪽 padding을 빼고 한쪽 border를 더한다
             var width =
