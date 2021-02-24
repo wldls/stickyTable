@@ -192,11 +192,11 @@
             mergeWidth = 0;
 
           for (var i = 0; i < mergeCell; i++) {
-            // 양 끝 셀의 한쪽 padding을 빼고 한쪽 border를 더한다
+            // 양 끝 셀의 한쪽 padding을 뺀다
             var width =
               i > 0 && i < mergeCell - 1
                 ? mergeEl.innerWidth()
-                : mergeEl.innerWidth() - padding + border;
+                : mergeEl.innerWidth() - padding;
 
             // 현재 엘리먼트 넓이 구하기
             mergeWidth += width;
@@ -206,7 +206,8 @@
             mergeEl.css("z-index", "-1");
           }
 
-          $(el).width(mergeWidth);
+          // 한쪽 border를 더한다
+          $(el).width(mergeWidth + border);
         } else if (isRow) {
           // 세로 병합
           var mergeEl = $(el);
@@ -217,11 +218,11 @@
           var mergeHeight = 0;
 
           for (var i = 0; i < mergeCell; i++) {
-            // 양 끝 셀의 한쪽 padding을 빼고 한쪽 border를 더한다
+            // 양 끝 셀의 한쪽 padding을 뺀다
             var height =
               i > 0 && i < mergeCell - 1
                 ? mergeEl.innerHeight()
-                : mergeEl.innerHeight() - padding + border;
+                : mergeEl.innerHeight() - padding;
 
             // 현재 엘리먼트 높이 구하기
             mergeHeight += height;
@@ -231,10 +232,11 @@
             mergeEl = $tr.next().find(el.nodeName).eq(idx);
 
             // position: fixed인 경우 absolute된 태그가 보이지 않으므로 -1하여 숨김처리
-            mergeEl.css("z-index", "-1");
+            mergeEl.css({ top: "0px", "z-index": "-1" });
           }
 
-          $(el).height(mergeHeight);
+          // 한쪽 border를 더한다
+          $(el).height(mergeHeight + border);
         }
       });
     },
