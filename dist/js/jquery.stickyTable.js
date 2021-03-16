@@ -184,6 +184,9 @@
         var isRow = $(el).hasClass("row");
         var mergeCell = $(el).data("merge");
 
+        // position absolute로 행병합처럼 보이게 설정
+        $(el).find('.desc').css({ position:'absolute' });
+
         if (isCol) {
           // 가로 병합
           var mergeEl = $(el),
