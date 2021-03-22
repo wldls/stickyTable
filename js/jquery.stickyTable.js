@@ -215,31 +215,38 @@
           // 세로 병합
           var mergeEl = $(el);
           var $tr = mergeEl.parents("tr");
-          var idx = $(el).index();
+          // var idx = $(el).index();
           var padding = Number($(el).css("padding-top").replace("px", ""));
           var border = Number($(el).css("border-top-width").replace("px", ""));
           var mergeHeight = 0;
           
           // sticky_cell 영역의 높이 구하기 : th가 줄바꿈되어 있는 경우가 있으므로 기준 높이를 sticky_cell이 아닌 일반 th로 잡는다.
           var $th = $tr.find('th:not(".sticky_cell")');
-          for (var i = 0; i < mergeCell; i++) {
-            // 병합된 셀의 위 아래 패딩값을 빼고 높이를 정해야 하므로 양 끝 셀은 한쪽 padding을 빼고, 중간 셀은 한쪽 border씩 겹쳐지므로 한쪽 border값을 뺀다.
-            var height =
-              i > 0 && i < mergeCell - 1
-                ? $th.outerHeight() - border
-                : $th.outerHeight() - padding;
-
-            // 현재 엘리먼트 높이 구하기
-            mergeHeight += height;
-
-            // 다음 엘리먼트 설정
-            $tr = $th.parents("tr");            
-            $th = $tr.next().find(el.nodeName).not('.sticky_cell');
-            
-            // position: fixed인 경우 absolute된 태그가 보이지 않으므로 -1하여 숨김처리
-            $th.css({ top: "0px", "z-index": "-1" });
-          }
           
+          if($th[0].hasAttribute('rowspan')){
+        	  // 고정셀이 아닌 th중 rowspan이 있는 경우
+        	  mergeHeight = $th.outerHeight() - (padding * 2);
+          }else{
+        	  // 고정셀이 아닌 th중 rowspan이 없는 경우        	  
+            for (var i = 0; i < mergeCell; i++) {
+              // 병합된 셀의 위 아래 패딩값을 빼고 높이를 정해야 하므로 양 끝 셀은 한쪽 padding을 빼고, 중간 셀은 한쪽 border씩 겹쳐지므로 한쪽 border값을 뺀다.
+              var height =
+                i > 0 && i < mergeCell - 1
+                  ? $th.outerHeight() - border
+                  : $th.outerHeight() - padding;
+
+              // 현재 엘리먼트 높이 구하기
+              mergeHeight += height;
+
+              // 다음 엘리먼트 설정
+              $tr = $th.parents("tr");            
+              $th = $tr.next().find(el.nodeName).not('.sticky_cell');
+              
+              // position: fixed인 경우 absolute된 태그가 보이지 않으므로 -1하여 숨김처리
+              $th.css({ top: "0px", "z-index": "-1" });
+            }
+          }
+                    
           // 중간 셀 중 마지막 셀은 두 개의 border를 빼야 하므로 한쪽 border값만큼 한번 더 뺀다.
           $(el).height(mergeHeight - border);
         }
