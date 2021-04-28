@@ -240,10 +240,11 @@
 
               // 다음 엘리먼트 설정
               $tr = $th.parents("tr");            
-              $th = $tr.next().find(el.nodeName).not('.sticky_cell');
+              $thAll = $tr.next().find(el.nodeName);	// z-index처리를 위해 sticky_cell이 포함된 th도 필요하다.
+              $th = $thAll.not('.sticky_cell');
               
-              // position: fixed인 경우 absolute된 태그가 보이지 않으므로 -1하여 숨김처리
-              $th.css({ top: "0px", "z-index": "-1" });
+              // position: fixed인 경우 absolute된 태그가 보이지 않으므로 -1하여 숨김처리              
+              $thAll.css({ top: "0px", "z-index": "-1" });
             }
           }
                     
