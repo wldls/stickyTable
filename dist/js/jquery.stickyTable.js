@@ -195,22 +195,28 @@
             mergeWidth = 0;
 
           for (var i = 0; i < mergeCell; i++) {
-            // 양 끝 셀의 한쪽 padding을 뺀다
+        	// 각 셀의 border 한쪽을 뺀다.
+        	var elOuterWidth = mergeEl.outerWidth() - 1;
+        	// 양 끝 셀의 한쪽 padding을 뺀다
             var width =
               i > 0 && i < mergeCell - 1
-                ? mergeEl.innerWidth()
-                : mergeEl.innerWidth() - padding;
-
+                ? elOuterWidth
+                : elOuterWidth - padding;
+              
             // 현재 엘리먼트 넓이 구하기
             mergeWidth += width;
+            
+            if(i !== 0){
+            	// position: fixed인 경우 absolute된 태그가 보이지 않으므로 -1하여 숨김처리
+            	mergeEl.css("z-index", "-1");           	
+            }
+            
             // 다음 엘리먼트 설정
             mergeEl = mergeEl.next();
-            // position: fixed인 경우 absolute된 태그가 보이지 않으므로 -1하여 숨김처리
-            mergeEl.css("z-index", "-1");
           }
-
-          // 한쪽 border를 더한다
-          $(el).width(mergeWidth + border);
+          
+          // 한쪽 border를 뺀다
+          $(el).width(mergeWidth - border);
         } else if (isRow) {
           // 세로 병합
           var mergeEl = $(el);
